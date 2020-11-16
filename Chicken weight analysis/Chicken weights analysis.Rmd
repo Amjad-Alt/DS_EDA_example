@@ -1,0 +1,72 @@
+---
+title: "Chick Weight Analysis"
+author: "Amjad Altuwayjiri"
+date: "03/09/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+
+keep <- packages[!(packages %in% installed.packages()[,"Package"])]
+
+if(length(keep)) {
+  install.packages(keep)
+}
+
+```
+
+## Descriptive Statisticst.
+
+This study shows the effect of the type of food on the chicken wight. The type of food has been tested are:casein, horsebean, linseed, meatmeal, soybean and sunflower.
+
+   
+
+
+```{r chickwts, echo= FALSE}
+
+chickwts %>% 
+  group_by(feed) %>%
+  summarise(n = length(feed),
+            average = mean(weight), 
+            SD = sd(weight)) 
+
+
+```
+
+## Plots
+
+
+```{r boxplot, echo=FALSE}
+ggplot(chickwts, aes(x = feed, y = weight)) +
+  geom_jitter() +
+  stat_summary(fun.data = mean_sdl,
+               fun.args = list(mult = 1),
+               col = "red")
+
+ggplot(chickwts, aes(x = feed, y = weight)) +
+   geom_boxplot()
+```
+
+
+
+## Inferential Statistics
+
+```{r ANOVA, echo=FALSE}
+chickwts_lm <- lm(weight ~ feed, data = chickwts)
+chickwts_lm
+#1- way anova
+anova(chickwts_lm)
+```
+
+## Over all view 
+
+```{r results echo=FALSE }
+chickwts.av <- aov(weight ~ feed, data = chickwts)
+tukeyTest <- TukeyHSD(chickwts.av)
+datatable(tukeyTest$feed)
+chickwts.av
+tukeyTest
+
+
