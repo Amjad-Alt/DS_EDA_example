@@ -29,3 +29,4 @@ table width of top of diamond relative to widest point (43--95).
 
 
 *Meditation:
+This study shows the effect of meditation in healing.
